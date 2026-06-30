@@ -114,29 +114,87 @@ export default function App() {
 
       {/* Section 3 — How It Was Done */}
       <section className="py-20 sm:py-28 px-4">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           <p className="text-xs text-zinc-500 uppercase tracking-widest text-center mb-10">
             HOW IT WAS DONE
           </p>
-          <div className="max-w-2xl mx-auto bg-[#050f05] border border-green-900 rounded-lg p-6 font-mono text-sm leading-7">
-            <p className="text-green-500">
-              $ migration-agent --env prod --target elastx
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {[
+              {
+                n: "01",
+                label: "Architecture",
+                desc: "Cross-cluster auth verified. Service taxonomy defined. Per-class runbooks written before a single pod moved.",
+              },
+              {
+                n: "02",
+                label: "Stateless services",
+                desc: "Each service: create on Elastx, set Linode as transparent proxy, flip catalog URL, scale down Linode pod.",
+              },
+              {
+                n: "03",
+                label: "Parameter stores",
+                desc: "174 app-config-svc instances. 227 Valkey instances, all PVC-backed, two distinct access patterns requiring different cutover paths.",
+              },
+              {
+                n: "04",
+                label: "Databases",
+                desc: "PostgreSQL with live cross-cluster replication running before atomic cutover. TCP relay for all cluster-internal dependencies.",
+              },
+              {
+                n: "05",
+                label: "Runner services",
+                desc: "web, python, golang, wasm, dotnet runners unblocked once parameter stores were stable.",
+              },
+              {
+                n: "06",
+                label: "MyApps",
+                desc: "Tenant custom apps migrated per runner type. Linode deploy-manager remains the single control plane for all clusters.",
+              },
+            ].map(({ n, label, desc }) => (
+              <div
+                key={n}
+                className="bg-[#050f05] border border-green-900/50 rounded-lg p-4 font-mono"
+              >
+                <p className="text-green-400 text-xs mb-1">{n}</p>
+                <p className="text-green-200/80 text-sm font-semibold mb-2">
+                  {label}
+                </p>
+                <p className="text-zinc-400 text-xs leading-relaxed">{desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="max-w-2xl mx-auto bg-[#050f05] border border-green-900 rounded-lg p-6 font-mono text-sm leading-7 mt-10">
+            <p className="text-green-500">$ grep -c "✅" migration-log.md</p>
+            <p className="text-green-400">174</p>
+            <p className="text-green-500 mt-2">
+              $ grep "incident" ops-incidents.md | wc -l
             </p>
-            <div className="text-green-200/70 mt-2">
-              <p>The migration was orchestrated by AI agents.</p>
-              <p>Each service namespace was analyzed, classified,</p>
-              <p>and moved with per-instance verification.</p>
-              <br />
-              <p>Persistent stores, parameter-store Valkies, and</p>
-              <p>stateful services required custom migration paths.</p>
-              <p>Agents handled 210 namespaces across multiple</p>
-              <p>sessions, with human review at each phase gate.</p>
-              <br />
+            <p className="text-green-400">4</p>
+            <div className="text-zinc-500 mt-4">
               <p>
-                1,287 tenants experienced no disruption.
-                <span className="inline-block w-2 h-4 bg-green-400 ml-1 animate-pulse align-middle" />
+                # Major incident: 139 Valkies migrated with wrong classification
               </p>
+              <p># → widespread HTTP 502s → full revert → classification</p>
+              <p># procedure rewritten → re-migrated correctly.</p>
+              <p>#</p>
+              <p>
+                # cert-manager issuer naming: patched on every service
+                post-deploy.
+              </p>
+              <p>
+                # nginx admission webhook: batch ingresses need 2s sleep or the
+              </p>
+              <p># controller falls over.</p>
+              <p>
+                # Orchestrator proxy must be transparent, not 301 — auth_request
+              </p>
+              <p># subrequests do not follow redirects.</p>
             </div>
+            <p className="mt-2 text-green-200/70">
+              ▋
+              <span className="inline-block w-2 h-4 bg-green-400 ml-1 animate-pulse align-middle" />
+            </p>
           </div>
         </div>
       </section>
