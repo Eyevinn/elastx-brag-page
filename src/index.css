@@ -1,3 +1,7 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+body {
+  font-family: "JetBrains Mono", monospace;
+  background: #0a0f0a;
+  margin: 0;
+}
